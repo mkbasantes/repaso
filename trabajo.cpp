@@ -20,7 +20,7 @@ double trapecio(double a, double b,int n){
 int main(int argc, char** argv){
     double a=0;
     double b=1;
-    int n=1000000;
+    int n=10000000;
     double h= (b-a) / n;
     double fa=funcion(a)/2;
     double fb=funcion(b)/2;
@@ -28,7 +28,7 @@ int main(int argc, char** argv){
     int size;
     int div=n/4;
     
-    int data[n];
+    int* data = new int [n];
     MPI_Init(&argc,&argv);
    
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); 
