@@ -11,18 +11,18 @@ int main(int argc, char** argv){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); 
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     srand(time(NULL));
-    /*int div=30/size;
+    int div=30/size;
     int a[30][3];
     
     for(int i=0;i<30;i++){
-        a[i][0]=rand()%100+1;
-        a[i][1]=rand()%100+1;
-        a[i][2]=rand()%100+1;
+        a[i][0]=rand()%5+1;
+        a[i][1]=rand()%5+1;
+        a[i][2]=rand()%5+1;
     }
     int c[1][3];
-        c[1][0]=rand()%100;
-        c[1][1]=rand()%100;
-        c[1][2]=rand()%100;
+        c[0][0]=rand()%5+1;
+        c[0][1]=rand()%5+1;
+        c[0][2]=rand()%5+1;
     
     if(rank==0){
         int part=div+2;
@@ -35,9 +35,9 @@ int main(int argc, char** argv){
          for(int i= 0; i<30;i++){
             printf("(%d , %d , %d) \n ",a[i][0],a[i][1],a[i][2]);
         }
-         printf("c(%d , %d , %d) \n ",c[1][0],c[1][1],c[1][2]);
+         printf("c(%d , %d , %d) \n ",c[0][0],c[0][1],c[0][2]);
         for(int i=0;i<div+2;i++){
-            if(c[1][0]/a[i][0]==c[1][1]/a[i][1]&&c[1][0]/a[i][0]==c[1][2]/a[i][2]){
+            if((double)c[0][0]/(double)a[i][0]==(double)c[0][1]/(double)a[i][1]&&(double)c[0][0]/(double)a[i][0]==(double)c[0][2]/(double)a[i][2]){
                printf("es paralelo el indice %d del vector a \n",i);
             }
         }
@@ -61,17 +61,22 @@ int main(int argc, char** argv){
         int cont2=0;
         
         for(int i=0;i<div;i++){
-            if(c[1][0]/a[i][0]==c[1][1]/a[i][1]&&c[1][0]/a[i][0]==c[1][2]/a[i][2]){
+          
+           // printf("--%f-%f-%f\n",(double)c[1][0]/(double)a[i][0],(double)c[1][1]/(double)a[i][1],(double)c[1][2]/(double)a[i][2]);
+            if((double)c[0][0]/(double)a[i][0]==(double)c[0][1]/(double)a[i][1]&(double)c[0][0]/(double)a[i][0]==(double)c[0][2]/(double)a[i][2]){
+                printf("%d %d %d***\n",a[i][0],a[i][1],a[i][2]);
+                 printf("---%d;  %d;  %d\n",c[0][0],c[0][1],c[0][2]);
                 posicion[cont2]=cont;
                 cont2++;
             }
             cont++;
            
         }
+        printf("%d-----\n",cont2);
          MPI_Send(&cont2,1,MPI_INT,0,0,MPI_COMM_WORLD);
          MPI_Send(&posicion[0],cont2,MPI_INT,0,0,MPI_COMM_WORLD);
 
-    }*/
+    }
     //ejecicio 2
     /*
     if(rank==0){
@@ -144,6 +149,7 @@ int main(int argc, char** argv){
     }*/
 
        //ejercicio 3
+       /*
        int n=100;
 int div=n/size;
 int a[n][2][2];
@@ -190,7 +196,7 @@ if(rank==0){
             printf("(%d , %d ) %d\n ",b[i][0],b[i][1],rank);
     }
 }
-   
+   */
    
 
     
