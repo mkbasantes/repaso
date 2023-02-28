@@ -11,6 +11,7 @@ int main(int argc, char** argv){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); 
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     srand(time(NULL));
+    /*
     int div=30/size;
     int a[30][3];
     
@@ -76,7 +77,7 @@ int main(int argc, char** argv){
          MPI_Send(&cont2,1,MPI_INT,0,0,MPI_COMM_WORLD);
          MPI_Send(&posicion[0],cont2,MPI_INT,0,0,MPI_COMM_WORLD);
 
-    }
+    }*/
     //ejecicio 2
     /*
     if(rank==0){
@@ -198,7 +199,123 @@ if(rank==0){
 }
    */
    
+    int n=8;
+    int div=n/4;
+    int a[n][n];
+    int b[n][n];
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            a[i][j]=rand()%5+1;
+            b[i][j]=rand()%5+1;
+        }
+    }
+    
+   
+    if(rank==0){
 
+            for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+            printf( "%d  ",a[i][j]);
+            
+            }
+            printf( "\n");
+        }
+        printf( "\n ----------\n");
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+            
+            printf( "%d  ",b[i][j]); 
+            }
+            printf( "\n ");
+        }
+        int part=div;
+        for(int i=1;i<4;i++){
+            MPI_Send(&a[part][0],div*n,MPI_INT,i,0,MPI_COMM_WORLD);
+            part+=div;
+        }
+        int c[div][n];
+        for(int i=0;i<div;i++){
+          
+            int cont=0;
+            for(int k=0;k<n;k++){
+                int suma=0;
+                for(int j=0;j<n;j++){
+                 suma=suma + a[i][j]*b[j][k];
+                }
+               
+                c[i][cont]=suma;
+                cont++;
+            } 
+        }
+        int total[n][n];
+    int rank1[div][n];
+    MPI_Recv(rank1,div*n,MPI_INT,1,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+    int rank2[div][n];
+    MPI_Recv(rank2,div*n,MPI_INT,2,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+    int rank3[div][n];
+    MPI_Recv(rank3,div*n,MPI_INT,3,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+ 
+        for(int i=0;i<div;i++){
+          
+            for(int j=0;j<n;j++){
+                        total[i][j]=c[i][j];
+                        
+                    }
+        }
+        int cont=0;
+         for(int i=div;i<div*2;i++){
+        
+            for(int j=0;j<n;j++){
+                        total[i][j]=rank1[cont][j];
+                        
+                    }
+                    cont++;
+        }
+         int cont2=0;
+         for(int i=div*2;i<div*3;i++){
+          
+            for(int j=0;j<n;j++){
+                        total[i][j]=rank2[cont2][j];
+                       
+                    }
+                     cont2++;
+        }
+        int cont3=0;
+        for(int i=div*3;i<div*4;i++){
+          
+            for(int j=0;j<n;j++){
+                        total[i][j]=rank3[cont3][j];
+                        
+                    }
+                    cont3++;
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+            printf( "%d  ",total[i][j]);
+            
+            }
+            printf( "\n");
+        }
+    }else{
+        MPI_Recv(a,div*n,MPI_INT,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+        int c[div][n];
+        for(int i=0;i<div;i++){
+          
+            int cont=0;
+            for(int k=0;k<n;k++){
+                int suma=0;
+                for(int j=0;j<n;j++){
+                 suma=suma + a[i][j]*b[j][k];
+                }
+               
+                c[i][cont]=suma;
+                cont++;
+            } 
+        }
+       
+          MPI_Send(&c[0][0],div*n,MPI_INT,0,0,MPI_COMM_WORLD);
+
+    }
     
      MPI_Finalize(); 
     return 0;
