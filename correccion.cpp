@@ -19,16 +19,19 @@ int main(int argc, char** argv){
         a [i][1]=rand()%11;
         a [i][2]=rand()%11;
     }
-    for(int i=0;i<3;i++){
-        c [i][0]=rand()%11;
-        c [i][1]=rand()%11;
-        c [i][2]=rand()%11;
-    }/*
+    /*
     for(int i= 0; i<30;i++){
             printf("(%d , %d , %d)\n ",a[i][0],a[i][1],a[i][2]);
         }*/
    std::printf("hola soy el rank %d, de un total de %d procesos\n" ,rank,size ); 
     if(rank==0){
+        int c[3] [3];
+        for(int i=0;i<3;i++){
+        c [i][0]=rand()%11;
+        c [i][1]=rand()%11;
+        c [i][2]=rand()%11;
+        }
+         MPI_Bcast(c,9,MPI_INT,0,MPI_COMM_WORLD);
         MPI_Send(&a[9][0],21,MPI_INT,1,0,MPI_COMM_WORLD);
         MPI_Send(&a[16][0],21,MPI_INT,2,0,MPI_COMM_WORLD);
         MPI_Send(&a[23][0],21,MPI_INT,3,0,MPI_COMM_WORLD);
@@ -79,7 +82,8 @@ int main(int argc, char** argv){
 
     }else{
         MPI_Recv(a,21,MPI_INT,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-       
+        int c[3] [3];
+        MPI_Bcast(c,9,MPI_INT,0,MPI_COMM_WORLD);
         int posicion[7];
          int cont=0;
         for(int i=0;i<7;i++){

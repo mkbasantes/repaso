@@ -2,6 +2,7 @@
 #include <mpi.h>
 #include <cmath>
 #include <stdlib.h>
+#include <omp.h>
 
 int main(int argc, char** argv){
     
@@ -11,7 +12,7 @@ int main(int argc, char** argv){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); 
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     srand(time(NULL));
-    /*
+    /*verificar si es paralelo
     int div=30/size;
     int a[30][3];
     
@@ -78,7 +79,7 @@ int main(int argc, char** argv){
          MPI_Send(&posicion[0],cont2,MPI_INT,0,0,MPI_COMM_WORLD);
 
     }*/
-    //ejecicio 2
+    //ejecicio 2 impar-par
     /*
     if(rank==0){
         int n=10;
@@ -131,7 +132,7 @@ int main(int argc, char** argv){
             printf(" %d \n",par[i]);
         }
     }*/
-    /*
+    /*barrier
     int i=0;
      while(i<rank){
      
@@ -149,7 +150,7 @@ int main(int argc, char** argv){
         i++;
     }*/
 
-       //ejercicio 3
+       //ejercicio 3 punto medio
        /*
        int n=100;
 int div=n/size;
@@ -198,21 +199,21 @@ if(rank==0){
     }
 }
    */
-   
+   //multiplicacion 
     int n=8;
     int div=n/4;
     int a[n][n];
     int b[n][n];
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            a[i][j]=rand()%5+1;
-            b[i][j]=rand()%5+1;
-        }
-    }
+
     
    
     if(rank==0){
-
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                a[i][j]=rand()%5+1;
+                b[i][j]=rand()%5+1;
+            }
+        }
             for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
             printf( "%d  ",a[i][j]);
@@ -299,6 +300,7 @@ if(rank==0){
     }else{
         MPI_Recv(a,div*n,MPI_INT,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         int c[div][n];
+       
         for(int i=0;i<div;i++){
           
             int cont=0;
@@ -312,7 +314,7 @@ if(rank==0){
                 cont++;
             } 
         }
-       
+        }
           MPI_Send(&c[0][0],div*n,MPI_INT,0,0,MPI_COMM_WORLD);
 
     }
